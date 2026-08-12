@@ -1,0 +1,36 @@
+name: CI/CD Command Center Demo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Simulate deployment
+        run: |
+          echo "Deploying application..."
+          sleep 10
+          echo "Deployment successful"
+
+      - name: Send deployment to Command Center
+        if: always()
+        run: |
+          curl -X POST http://YOUR_SERVER/api/webhooks/github/ \
+            -H "Content-Type: application/json" \
+            -d '{
+              "environment": "Production",
+              "pipeline_name": "GitHub Actions Deployment",
+              "ci_provider": "GitHub Actions",
+              "status": "SUCCESS",
+              "commit_sha": "${{ github.sha }}",
+              "branch": "${{ github.ref_name }}",
+              "triggered_by": "${{ github.actor }}",
+              "build_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }'
