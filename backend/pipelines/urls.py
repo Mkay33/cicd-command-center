@@ -1,31 +1,27 @@
-from django.contrib import admin
-from django.urls import include, path
+from django.urls import path
 
-from pipelines.views import (
+from .views import (
     PipelineListView,
     ProductionPipelineView,
     MetricsView,
 )
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path(
-        "api/pipelines/",
+        "pipelines/",
         PipelineListView.as_view(),
         name="pipeline-list",
     ),
+
     path(
-        "api/pipelines/production/",
+        "pipelines/production/",
         ProductionPipelineView.as_view(),
         name="production-pipelines",
     ),
+
     path(
-        "api/metrics/",
+        "metrics/",
         MetricsView.as_view(),
         name="metrics",
-    ),
-    path(
-        "api/webhooks/",
-        include("webhooks.urls"),
     ),
 ]
